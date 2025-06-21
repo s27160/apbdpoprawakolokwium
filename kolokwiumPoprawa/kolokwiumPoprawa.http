@@ -1,0 +1,6 @@
+@kolokwiumPoprawa_HostAddress = http://localhost:5248
+
+GET {{kolokwiumPoprawa_HostAddress}}/api/
+Accept: application/json
+
+###
