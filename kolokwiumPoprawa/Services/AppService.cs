@@ -16,13 +16,29 @@ public class AppService
         _context = context;
     }
 
-    public List<RecordDto> GetRecords()
+    public List<RecordDto> GetRecords(SearchRecordsDto searchRecordsDto)
     {
-        return _context.Records
+        IQueryable<Record> records = _context.Records
             .Include(r => r.Student)
             .Include(r => r.Language)
-            .Include(r => r.Task)
-            .Select(record => new RecordDto()
+            .Include(r => r.Task);
+
+        if (searchRecordsDto.LanguageId != null)
+        {
+            records = records.Where(r => r.LanguageId == searchRecordsDto.LanguageId);
+        }
+        
+        if (searchRecordsDto.TaskId != null)
+        {
+            records = records.Where(r => r.TaskId == searchRecordsDto.TaskId);
+        }
+
+        if (searchRecordsDto.CreatedAt != null)
+        {
+            records = records.Where(r => r.CreatedAt == searchRecordsDto.CreatedAt.Value);
+        }
+
+        return records.Select(record => new RecordDto()
             {
                 Id = record.Id,
                 Language = new LanguageDto() { Id = record.Language.Id, Name = record.Language.Name },
@@ -79,7 +95,8 @@ public class AppService
         _context.Records.Add(record);
         _context.SaveChanges();
 
-        return new {
+        return new
+        {
             id = record.Id
         };
     }

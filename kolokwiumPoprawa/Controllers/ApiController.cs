@@ -12,9 +12,9 @@ public class ApiController : ControllerBase
     public ApiController(AppService appService) => _appService = appService;
     
     [HttpGet("/records")]
-    public IActionResult GetRecords()
+    public IActionResult GetRecords([FromQuery] SearchRecordsDto searchRecordsDto)
     {
-        return Ok(_appService.GetRecords());
+        return Ok(_appService.GetRecords(searchRecordsDto));
     }
 
     [HttpPost("/record/add")]
